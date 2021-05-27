@@ -1,5 +1,16 @@
-const classifier = knnClassifier.create();
+const classifier = knnClassifier.create(); //creat new classifier
+// classifier = JSON.parse(our file in hard drive)
 const webcamElement = document.getElementById('webcam');
+
+
+// let SIVAN={
+//     name: "S",
+//     family: "Y"
+// }
+//
+// let example = JSON.stringlify(SIVAN)
+//
+// os.save(path, example)
 
 let net;
 
@@ -51,6 +62,7 @@ async function app() {
         else
         {
               img= tf.node.decodeJpeg(img)
+            //const saveResult = await model.save('localstorage://my-model-1');//////////////////////////////////
         }
 
 
@@ -59,7 +71,10 @@ async function app() {
         const activation = net.infer(img, true);
 
         // Pass the intermediate activation to the classifier.
-        classifier.addExample(activation, classId);
+        classifier.addExample(activation, classId);  //add image
+
+        //model= JSON.stringlify(classifier)    ///////// to save model on hard drive
+
 
         // Dispose the tensor to release the memory.
         img.dispose();
@@ -72,15 +87,14 @@ async function app() {
     document.getElementById('class-d').addEventListener('click', () => addExample(3));
 
     while (true) {
-        if (classifier.getNumClasses() > 0) {
-            const img = await webcam.capture();
+        if (classifier.getNumClasses() > 0) {   ////////// machine learning
+            const img = await webcam.capture();//open web cam
 
             // Get the activation from mobilenet from the webcam.
             const activation = net.infer(img, 'conv_preds');
             // Get the most likely class and confidence from the classifier module.
             const result = await classifier.predictClass(activation);
-            //model= JSON.stringlify(classifier)
-            //JSON.parse(model)
+
 
             const classes = ['A', 'B', 'C', 'D'];
             document.getElementById('console').innerText = `
@@ -95,6 +109,13 @@ async function app() {
         // fire.
         await tf.nextFrame();
     }
+
+//     saveButton = createButton('save');
+//   saveButton.mousePressed(function() {
+//     classifier.save();
+//   }); //
+
+
 }
 
 app();
